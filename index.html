@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CREATIVOS GAMES</title>
+
+<link rel="icon" type="image/png" href="https://www.creativosrp.com/images/logo/Logo3d.gif">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:Arial, Helvetica, sans-serif;
+    background:#020202;
+    color:white;
+    overflow-x:hidden;
+}
+
+/* BACKGROUND */
+body::before{
+    content:'';
+    position:fixed;
+    inset:0;
+    background:
+    radial-gradient(circle at top left, rgba(204,153,153,.18), transparent 20%),
+    radial-gradient(circle at bottom right, rgba(204,153,153,.12), transparent 20%),
+    linear-gradient(to bottom,#050505,#000);
+    z-index:-2;
+}
+
+body::after{
+    content:'';
+    position:fixed;
+    inset:0;
+    background-image:
+    linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
+    background-size:50px 50px;
+    z-index:-1;
+    opacity:.2;
+}
+
+/* SCROLL */
+::-webkit-scrollbar{
+    width:8px;
+}
+::-webkit-scrollbar-thumb{
+    background:#CC9999;
+    border-radius:20px;
+}
+
+/* MAIN */
+.container{
+    width:95%;
+    max-width:1800px;
+    margin:auto;
+    padding:25px;
+}
+
+/* NAVBAR */
+.navbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:20px 30px;
+    border:1px solid rgba(204,153,153,.15);
+    background:rgba(15,15,15,.7);
+    backdrop-filter:blur(20px);
+    border-radius:25px;
+    margin-bottom:25px;
+    box-shadow:0 0 40px rgba(204,153,153,.08);
+}
+
+.logoArea{
+    display:flex;
+    align-items:center;
+    gap:20px;
+}
+
+.logoArea img{
+    width:80px;
+    height:80px;
+    object-fit:contain;
+    filter:drop-shadow(0 0 15px rgba(204,153,153,.4));
+}
+
+.logoText h1{
+    font-size:38px;
+    color:#CC9999;
+    letter-spacing:5px;
+}
+
+.logoText p{
+    color:#777;
+    margin-top:5px;
+}
+
+.navButtons{
+    display:flex;
+    gap:15px;
+}
+
+.navBtn{
+    background:rgba(204,153,153,.08);
+    border:1px solid rgba(204,153,153,.25);
+    color:#CC9999;
+    padding:14px 22px;
+    border-radius:14px;
+    cursor:pointer;
+    transition:.3s;
+    font-weight:bold;
+}
+
+.navBtn:hover{
+    background:#CC9999;
+    color:#000;
+    box-shadow:0 0 25px rgba(204,153,153,.4);
+}
+
+/* HERO */
+.hero{
+    display:grid;
+    grid-template-columns:1.4fr .6fr;
+    gap:25px;
+}
+
+/* PLAYER */
+.playerCard{
+    position:relative;
+    background:rgba(10,10,10,.8);
+    border:1px solid rgba(204,153,153,.15);
+    border-radius:30px;
+    overflow:hidden;
+    min-height:850px;
+    box-shadow:
+    0 0 50px rgba(204,153,153,.08),
+    inset 0 0 80px rgba(255,255,255,.02);
+}
+
+/* TOP INFO */
+.topInfo{
+    position:absolute;
+    top:20px;
+    left:20px;
+    z-index:10;
+    display:flex;
+    gap:12px;
+}
+
+.liveBox{
+    background:rgba(0,0,0,.65);
+    border:1px solid rgba(204,153,153,.2);
+    padding:12px 18px;
+    border-radius:14px;
+    backdrop-filter:blur(20px);
+    color:#CC9999;
+    font-weight:bold;
+    font-size:14px;
+}
+
+/* CONTROLS */
+.controls{
+    position:absolute;
+    top:20px;
+    right:20px;
+    z-index:10;
+    display:flex;
+    gap:12px;
+}
+
+.controlBtn{
+    background:rgba(0,0,0,.65);
+    border:1px solid rgba(204,153,153,.2);
+    color:#CC9999;
+    padding:14px 20px;
+    border-radius:14px;
+    cursor:pointer;
+    transition:.3s;
+    backdrop-filter:blur(20px);
+    font-weight:bold;
+}
+
+.controlBtn:hover{
+    background:#CC9999;
+    color:#000;
+    transform:translateY(-3px);
+    box-shadow:0 0 25px rgba(204,153,153,.35);
+}
+
+/* IFRAME */
+.playerFrame{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    border:none;
+    background:#000;
+}
+
+/* CENTER LOGO */
+.centerLogo{
+    position:absolute;
+    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:2;
+    pointer-events:none;
+}
+
+.centerLogo img{
+    width:300px;
+    opacity:.6;
+    animation:pulse 4s infinite;
+}
+
+@keyframes pulse{
+    0%{transform:scale(1);}
+    50%{transform:scale(1.05);}
+    100%{transform:scale(1);}
+}
+
+/* SIDE PANEL */
+.sidePanel{
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+}
+
+.panel{
+    background:rgba(12,12,12,.8);
+    border:1px solid rgba(204,153,153,.12);
+    border-radius:25px;
+    padding:25px;
+    backdrop-filter:blur(20px);
+    box-shadow:0 0 30px rgba(204,153,153,.05);
+}
+
+.panel h2{
+    color:#CC9999;
+    margin-bottom:20px;
+    font-size:24px;
+}
+
+.search{
+    width:100%;
+    padding:18px;
+    border:none;
+    outline:none;
+    background:#111;
+    border-radius:16px;
+    color:white;
+    border:1px solid rgba(204,153,153,.15);
+    transition:.3s;
+}
+
+.search:focus{
+    border-color:#CC9999;
+    box-shadow:0 0 25px rgba(204,153,153,.2);
+}
+
+/* STATS */
+.stats{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px;
+}
+
+.stat{
+    background:#101010;
+    border-radius:18px;
+    padding:20px;
+    border:1px solid rgba(204,153,153,.08);
+}
+
+.stat h3{
+    color:#CC9999;
+    font-size:28px;
+}
+
+.stat p{
+    color:#666;
+    margin-top:6px;
+}
+
+/* GAME CARD */
+.games{
+    margin-top:25px;
+}
+
+.games h2{
+    color:#CC9999;
+    font-size:34px;
+    margin-bottom:25px;
+}
+
+.gameGrid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+    gap:25px;
+}
+
+.gameCard{
+    position:relative;
+    overflow:hidden;
+    border-radius:25px;
+    background:#0b0b0b;
+    border:1px solid rgba(204,153,153,.12);
+    transition:.4s;
+}
+
+.gameCard:hover{
+    transform:translateY(-10px);
+    box-shadow:0 0 45px rgba(204,153,153,.15);
+    border-color:#CC9999;
+}
+
+.gameCard img{
+    width:100%;
+    height:230px;
+    object-fit:cover;
+}
+
+.overlay{
+    position:absolute;
+    inset:0;
+    background:linear-gradient(to top, rgba(0,0,0,.95), transparent);
+}
+
+.gameContent{
+    position:absolute;
+    bottom:0;
+    width:100%;
+    padding:25px;
+}
+
+.gameContent h3{
+    font-size:28px;
+    margin-bottom:10px;
+}
+
+.gameContent p{
+    color:#999;
+    margin-bottom:18px;
+}
+
+.playBtn{
+    width:100%;
+    padding:16px;
+    border:none;
+    border-radius:14px;
+    background:#CC9999;
+    color:#000;
+    font-weight:bold;
+    cursor:pointer;
+    transition:.3s;
+    font-size:15px;
+}
+
+.playBtn:hover{
+    transform:scale(1.03);
+    box-shadow:0 0 35px rgba(204,153,153,.4);
+}
+
+/* --- ESTILOS DE LA INTELIGENCIA ARTIFICIAL INTERACTIVA --- */
+.ai-widget {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.ai-bubble-toggle {
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    background: #111;
+    border: 2px solid #CC9999;
+    box-shadow: 0 0 25px rgba(204, 153, 153, 0.4);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+}
+
+.ai-bubble-toggle:hover {
+    transform: scale(1.08);
+    background: #CC9999;
+}
+
+.ai-bubble-toggle img {
+    width: 35px;
+    height: 35px;
+    filter: drop-shadow(0 0 5px rgba(0,0,0,0.5));
+}
+
+.ai-chat-window {
+    width: 380px;
+    height: 500px;
+    background: rgba(10, 10, 10, 0.95);
+    border: 1px solid rgba(204, 153, 153, 0.3);
+    border-radius: 24px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.8), 0 0 30px rgba(204,153,153,0.1);
+    backdrop-filter: blur(20px);
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+    margin-bottom: 15px;
+    transition: 0.3s ease;
+}
+
+.ai-header {
+    background: linear-gradient(90deg, #161616, #221a1a);
+    padding: 15px 20px;
+    border-bottom: 1px solid rgba(204, 153, 153, 0.2);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.ai-header h3 {
+    color: #CC9999;
+    font-size: 16px;
+    letter-spacing: 1px;
+}
+
+.ai-messages {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap:12px;
+}
+
+.msg {
+    max-width: 80%;
+    padding: 12px 16px;
+    border-radius: 16px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.msg.ai {
+    background: rgba(204, 153, 153, 0.08);
+    border: 1px solid rgba(204, 153, 153, 0.2);
+    color: #e0e0e0;
+    align-self: flex-start;
+    border-top-left-radius: 4px;
+}
+
+.msg.user {
+    background: #CC9999;
+    color: #000;
+    font-weight: 500;
+    align-self: flex-end;
+    border-top-right-radius: 4px;
+}
+
+.ai-input-area {
+    padding: 15px;
+    background: #111;
+    border-top: 1px solid rgba(204, 153, 153, 0.15);
+    display: flex;
+    gap: 10px;
+}
+
+.ai-input-area input {
+    flex: 1;
+    background: #050505;
+    border: 1px solid #333;
+    padding: 12px;
+    border-radius: 10px;
+    color: white;
+    outline: none;
+}
+
+.ai-input-area input:focus {
+    border-color: #CC9999;
+}
+
+.ai-input-area button {
+    background: #CC9999;
+    color: black;
+    border: none;
+    padding: 0 15px;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+@media(max-width:1200px){
+    .hero{ grid-template-columns:1fr; }
+    .playerCard{ min-height:600px; }
+    .logoText h1{ font-size:28px; }
+    .ai-chat-window { width: 320px; height: 420px; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="navbar">
+        <div class="logoArea">
+            <img src="https://www.creativosrp.com/images/logo/Logo3d.gif">
+            <div class="logoText">
+                <h1>CREATIVOS GAMES</h1>
+                <p>Future Cloud Gaming Interface</p>
+            </div>
+        </div>
+
+        <div class="navButtons">
+            <button class="navBtn" onclick="goHome()">RESET</button>
+            <button class="navBtn" onclick="toggleFullscreen()">FULLSCREEN</button>
+        </div>
+    </div>
+
+    <div class="hero">
+        <div class="playerCard">
+            <div class="topInfo">
+                <div class="liveBox">● SYSTEM ONLINE</div>
+                <div class="liveBox">RTX STREAM READY</div>
+            </div>
+
+            <div class="controls">
+                <button class="controlBtn" onclick="toggleFullscreen()">⛶ FULLSCREEN</button>
+                <button class="controlBtn" onclick="goHome()">✖ CLOSE</button>
+            </div>
+
+            <div class="centerLogo" id="placeholderLogo">
+                <img src="https://www.creativosrp.com/images/logo/Logo3d.gif">
+            </div>
+
+            <iframe
+                id="mainPlayer"
+                class="playerFrame"
+                src="about:blank"
+                allowfullscreen
+                allow="autoplay; fullscreen; gamepad *; microphone; camera"
+                referrerpolicy="no-referrer">
+            </iframe>
+        </div>
+
+        <div class="sidePanel">
+            <div class="panel">
+                <h2>SEARCH ENGINE</h2>
+                <input
+                    type="text"
+                    class="search"
+                    id="searchInput"
+                    placeholder="Search Game..."
+                    onkeyup="filterGames()"
+                >
+            </div>
+
+            <div class="panel">
+                <h2>QUANTUM STATS</h2>
+                <div class="stats">
+                    <div class="stat">
+                        <h3>4K</h3>
+                        <p>Streaming</p>
+                    </div>
+                    <div class="stat">
+                        <h3>240</h3>
+                        <p>FPS Mode</p>
+                    </div>
+                    <div class="stat">
+                        <h3>RTX</h3>
+                        <p>Graphics</p>
+                    </div>
+                    <div class="stat">
+                        <h3>LIVE</h3>
+                        <p>Gaming</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h2>AI STATUS</h2>
+                <p style="color:#888; line-height:1.8;">
+                    Neural Gaming System Active.<br>
+                    Ultra Performance Enabled.<br>
+                    Quantum Rendering Online.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="games">
+        <h2>FEATURED GAME</h2>
+        <div class="gameGrid" id="gamesContainer">
+
+            <div class="gameCard game-item">
+                <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=1200&auto=format&fit=crop">
+                <div class="overlay"></div>
+                <div class="gameContent">
+                    <h3 class="title">LS RELAY</h3>
+                    <p>Next generation cloud gaming experience.</p>
+                    <button class="playBtn" onclick="playVideo('https://s3.amazonaws.com/lsrelay-a/index.html#/')">PLAY NOW</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="ai-widget">
+    <div class="ai-chat-window" id="aiChatWindow">
+        <div class="ai-header">
+            <h3>🤖 CREATIVOS AI ASSISTANT</h3>
+            <span style="color: #666; font-size: 12px; cursor:pointer;" onclick="toggleChat()">[HIDE]</span>
+        </div>
+        <div class="ai-messages" id="aiMessages">
+            <div class="msg ai">Hello! I am your Neural Assistant. I can search games or control the system interface. Try saying: <b>"Play LS Relay"</b> or <b>"Fullscreen"</b>.</div>
+        </div>
+        <div class="ai-input-area">
+            <input type="text" id="aiInput" placeholder="Ask AI anything..." onkeydown="if(event.key === 'Enter') sendAiMessage()">
+            <button onclick="sendAiMessage()">SEND</button>
+        </div>
+    </div>
+    <div class="ai-bubble-toggle" onclick="toggleChat()">
+        <img src="https://www.creativosrp.com/images/logo/Logo3d.gif" alt="AI">
+    </div>
+</div>
+
+<script>
+function playVideo(url){
+    const player = document.getElementById('mainPlayer');
+    const logo = document.getElementById('placeholderLogo');
+    player.src = url;
+    logo.style.display = "none";
+    window.scrollTo({ top:0, behavior:"smooth" });
+}
+
+function goHome(){
+    const player = document.getElementById('mainPlayer');
+    const logo = document.getElementById('placeholderLogo');
+    player.src = "about:blank";
+    logo.style.display = "flex";
+    if(document.fullscreenElement){ document.exitFullscreen(); }
+    window.scrollTo({ top:0, behavior:"smooth" });
+}
+
+function toggleFullscreen(){
+    const playerCard = document.querySelector(".playerCard");
+    if(!document.fullscreenElement){
+        playerCard.requestFullscreen();
+    }else{
+        document.exitFullscreen();
+    }
+}
+
+function filterGames(){
+    let input = document.getElementById("searchInput").value.toLowerCase();
+    let items = document.getElementsByClassName("game-item");
+    for(let i = 0; i < items.length; i++){
+        let title = items[i].getElementsByClassName("title")[0].innerText.toLowerCase();
+        items[i].style.display = title.includes(input) ? "block" : "none";
+    }
+}
+
+/* --- LÓGICA JAVASCRIPT DE LA INTELIGENCIA ARTIFICIAL --- */
+function toggleChat() {
+    const chat = document.getElementById('aiChatWindow');
+    chat.style.display = (chat.style.display === 'flex') ? 'none' : 'flex';
+}
+
+function sendAiMessage() {
+    const input = document.getElementById('aiInput');
+    const msgText = input.value.trim();
+    if (!msgText) return;
+
+    // Mostrar mensaje del usuario
+    appendMessage(msgText, 'user');
+    input.value = '';
+
+    // Simular procesamiento inteligente local antes de conectarse a servidores externos
+    setTimeout(() => {
+        processAiCommand(msgText);
+    }, 600);
+}
+
+function appendMessage(text, sender) {
+    const container = document.getElementById('aiMessages');
+    const msgDiv = document.createElement('div');
+    msgDiv.className = `msg ${sender}`;
+    msgDiv.innerHTML = text;
+    container.appendChild(msgDiv);
+    container.scrollTop = container.scrollHeight;
+}
+
+// Procesador Inteligente que automatiza tu Interfaz de manera Perfecta
+function processAiCommand(text) {
+    const cleanText = text.toLowerCase();
+
+    // 1. Control de comandos del sistema
+    if (cleanText.includes('fullscreen') || cleanText.includes('pantalla completa')) {
+        toggleFullscreen();
+        appendMessage("System updated: Fullscreen triggered.", 'ai');
+        return;
+    }
+    if (cleanText.includes('close') || cleanText.includes('stop') || cleanText.includes('home') || cleanText.includes('reset')) {
+        goHome();
+        appendMessage("Interface has been successfully reset.", 'ai');
+        return;
+    }
+
+    // 2. Control Inteligente: Búsqueda y ejecución automática de juegos de tu lista
+    if (cleanText.includes('play') || cleanText.includes('jugar') || cleanText.includes('open')) {
+        let items = document.getElementsByClassName("game-item");
+        for (let i = 0; i < items.length; i++) {
+            let title = items[i].getElementsByClassName("title")[0].innerText.toLowerCase();
+            if (cleanText.includes(title)) {
+                let btn = items[i].querySelector(".playBtn");
+                btn.click();
+                appendMessage(`Launching <b>${title.toUpperCase()}</b> now inside the Main Cloud Player...`, 'ai');
+                return;
+            }
+        }
+    }
+
+    // 3. Sistema de respuestas predefinidas sobre Creativos Games
+    if (cleanText.includes('hello') || cleanText.includes('hola') || cleanText.includes('hi')) {
+        appendMessage("Hello gamer! How can I assist you in the platform today?", 'ai');
+        return;
+    }
+
+    // 4. Respuesta alternativa (Aquí es donde conectarías tu API Key definitiva)
+    appendMessage("Command received. Running optimization protocols on Creative Servers...", 'ai');
+}
+</script>
+
+</body>
+</html>
