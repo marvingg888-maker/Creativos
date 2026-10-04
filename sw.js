@@ -1,4 +1,4 @@
-const CACHE = 'creativos-cord-v1';
+const CACHE = 'discord-pro-v2';
 const ASSETS = [
   '/',
   '/index.html',
