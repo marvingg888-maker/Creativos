@@ -1,745 +1,2274 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CREATIVOS GAMES</title>
-
-<link rel="icon" type="image/png" href="https://www.creativosrp.com/images/logo/Logo3d.gif">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0a0a0a">
+<meta name="description" content="Creativos Cord — chat premium estilo Discord">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Creativos">
+<title>Creativos Cord</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-512.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=gg+sans:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+:root {
+  --bg-deep: #050505;
+  --bg-server: #0a0a0a;
+  --bg-sidebar: #0d0d0d;
+  --bg-chat: #111111;
+  --bg-members: #0d0d0d;
+  --bg-input: #1a1a1a;
+  --bg-hover: rgba(204,153,153,.08);
+  --bg-active: rgba(204,153,153,.14);
+  --accent: #CC9999;
+  --accent-soft: rgba(204,153,153,.25);
+  --accent-glow: rgba(204,153,153,.35);
+  --text: #f2f2f2;
+  --text-muted: #8a8a8a;
+  --text-dim: #5c5c5c;
+  --online: #3ba55d;
+  --idle: #faa61a;
+  --dnd: #ed4245;
+  --offline: #747f8d;
+  --border: rgba(204,153,153,.12);
+  --radius: 12px;
+  --font: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
-body{
-    font-family:Arial, Helvetica, sans-serif;
-    background:#020202;
-    color:white;
-    overflow-x:hidden;
+* { margin:0; padding:0; box-sizing:border-box; }
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  font-family: var(--font);
+  background: var(--bg-deep);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
 }
 
-/* BACKGROUND */
-body::before{
-    content:'';
-    position:fixed;
-    inset:0;
-    background:
-    radial-gradient(circle at top left, rgba(204,153,153,.18), transparent 20%),
-    radial-gradient(circle at bottom right, rgba(204,153,153,.12), transparent 20%),
-    linear-gradient(to bottom,#050505,#000);
-    z-index:-2;
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(204,153,153,.3); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* ========== APP SHELL ========== */
+#app {
+  display: flex;
+  height: 100vh;
+  height: 100dvh;
+  background:
+    radial-gradient(ellipse at 0% 0%, rgba(204,153,153,.07), transparent 40%),
+    radial-gradient(ellipse at 100% 100%, rgba(204,153,153,.05), transparent 40%),
+    var(--bg-deep);
 }
 
-body::after{
-    content:'';
-    position:fixed;
-    inset:0;
-    background-image:
-    linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
-    background-size:50px 50px;
-    z-index:-1;
-    opacity:.2;
+/* ========== SERVER RAIL ========== */
+.server-rail {
+  width: 72px;
+  background: var(--bg-server);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 0;
+  gap: 8px;
+  border-right: 1px solid var(--border);
+  flex-shrink: 0;
+  z-index: 20;
+  overflow-y: auto;
 }
 
-/* SCROLL */
-::-webkit-scrollbar{
-    width:8px;
-}
-::-webkit-scrollbar-thumb{
-    background:#CC9999;
-    border-radius:20px;
-}
-
-/* MAIN */
-.container{
-    width:95%;
-    max-width:1800px;
-    margin:auto;
-    padding:25px;
-}
-
-/* NAVBAR */
-.navbar{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:20px 30px;
-    border:1px solid rgba(204,153,153,.15);
-    background:rgba(15,15,15,.7);
-    backdrop-filter:blur(20px);
-    border-radius:25px;
-    margin-bottom:25px;
-    box-shadow:0 0 40px rgba(204,153,153,.08);
+.server-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  background: #1a1a1a;
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: border-radius .2s, background .2s, box-shadow .2s;
+  overflow: hidden;
 }
 
-.logoArea{
-    display:flex;
-    align-items:center;
-    gap:20px;
+.server-btn img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-.logoArea img{
-    width:80px;
-    height:80px;
-    object-fit:contain;
-    filter:drop-shadow(0 0 15px rgba(204,153,153,.4));
+.server-btn:hover,
+.server-btn.active {
+  border-radius: 16px;
+  background: var(--accent);
+  color: #000;
+  box-shadow: 0 0 20px var(--accent-glow);
 }
 
-.logoText h1{
-    font-size:38px;
-    color:#CC9999;
-    letter-spacing:5px;
+.server-btn.active::before {
+  content: '';
+  position: absolute;
+  left: -16px;
+  width: 8px;
+  height: 40px;
+  background: var(--accent);
+  border-radius: 0 4px 4px 0;
 }
 
-.logoText p{
-    color:#777;
-    margin-top:5px;
+.server-btn .pill {
+  position: absolute;
+  left: -16px;
+  width: 8px;
+  height: 8px;
+  background: var(--text);
+  border-radius: 0 4px 4px 0;
+  opacity: 0;
+  transition: .2s;
 }
 
-.navButtons{
-    display:flex;
-    gap:15px;
+.server-btn:hover .pill { opacity: 1; height: 20px; }
+.server-btn.active .pill { display: none; }
+
+.server-divider {
+  width: 32px;
+  height: 2px;
+  background: rgba(255,255,255,.08);
+  border-radius: 1px;
+  margin: 4px 0;
 }
 
-.navBtn{
-    background:rgba(204,153,153,.08);
-    border:1px solid rgba(204,153,153,.25);
-    color:#CC9999;
-    padding:14px 22px;
-    border-radius:14px;
-    cursor:pointer;
-    transition:.3s;
-    font-weight:bold;
+.server-btn.add {
+  background: transparent;
+  border: 2px dashed rgba(204,153,153,.3);
+  color: var(--accent);
+  font-size: 22px;
 }
 
-.navBtn:hover{
-    background:#CC9999;
-    color:#000;
-    box-shadow:0 0 25px rgba(204,153,153,.4);
+.server-btn.add:hover {
+  border-style: solid;
+  background: var(--accent);
+  color: #000;
 }
 
-/* HERO */
-.hero{
-    display:grid;
-    grid-template-columns:1.4fr .6fr;
-    gap:25px;
+/* ========== SIDEBAR ========== */
+.sidebar {
+  width: 240px;
+  background: var(--bg-sidebar);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  border-right: 1px solid var(--border);
 }
 
-/* PLAYER */
-.playerCard{
-    position:relative;
-    background:rgba(10,10,10,.8);
-    border:1px solid rgba(204,153,153,.15);
-    border-radius:30px;
-    overflow:hidden;
-    min-height:850px;
-    box-shadow:
-    0 0 50px rgba(204,153,153,.08),
-    inset 0 0 80px rgba(255,255,255,.02);
+.server-header {
+  height: 48px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  background: rgba(0,0,0,.3);
+  transition: background .15s;
 }
 
-/* TOP INFO */
-.topInfo{
-    position:absolute;
-    top:20px;
-    left:20px;
-    z-index:10;
-    display:flex;
-    gap:12px;
+.server-header:hover { background: var(--bg-hover); }
+
+.server-header h1 {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: .5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.liveBox{
-    background:rgba(0,0,0,.65);
-    border:1px solid rgba(204,153,153,.2);
-    padding:12px 18px;
-    border-radius:14px;
-    backdrop-filter:blur(20px);
-    color:#CC9999;
-    font-weight:bold;
-    font-size:14px;
+.server-header svg { opacity: .6; flex-shrink: 0; }
+
+.channels {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 8px;
 }
 
-/* CONTROLS */
-.controls{
-    position:absolute;
-    top:20px;
-    right:20px;
-    z-index:10;
-    display:flex;
-    gap:12px;
+.category {
+  margin-bottom: 16px;
 }
 
-.controlBtn{
-    background:rgba(0,0,0,.65);
-    border:1px solid rgba(204,153,153,.2);
-    color:#CC9999;
-    padding:14px 20px;
-    border-radius:14px;
-    cursor:pointer;
-    transition:.3s;
-    backdrop-filter:blur(20px);
-    font-weight:bold;
+.category-header {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 8px;
+  margin-bottom: 4px;
+  cursor: pointer;
+  user-select: none;
 }
 
-.controlBtn:hover{
-    background:#CC9999;
-    color:#000;
-    transform:translateY(-3px);
-    box-shadow:0 0 25px rgba(204,153,153,.35);
+.category-header span {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .6px;
+  color: var(--text-muted);
 }
 
-/* IFRAME */
-.playerFrame{
-    position:absolute;
-    inset:0;
-    width:100%;
-    height:100%;
-    border:none;
-    background:#000;
+.category-header:hover span { color: var(--text); }
+.category-header svg {
+  width: 12px;
+  height: 12px;
+  color: var(--text-muted);
+  transition: transform .15s;
+}
+.category.collapsed .category-header svg { transform: rotate(-90deg); }
+.category.collapsed .channel-list { display: none; }
+
+.channel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: var(--text-muted);
+  font-size: 15px;
+  font-weight: 500;
+  transition: background .12s, color .12s;
+  position: relative;
 }
 
-/* CENTER LOGO */
-.centerLogo{
-    position:absolute;
-    inset:0;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    z-index:2;
-    pointer-events:none;
+.channel:hover {
+  background: var(--bg-hover);
+  color: var(--text);
 }
 
-.centerLogo img{
-    width:300px;
-    opacity:.6;
-    animation:pulse 4s infinite;
+.channel.active {
+  background: var(--bg-active);
+  color: var(--text);
 }
 
-@keyframes pulse{
-    0%{transform:scale(1);}
-    50%{transform:scale(1.05);}
-    100%{transform:scale(1);}
+.channel.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 60%;
+  background: var(--accent);
+  border-radius: 0 3px 3px 0;
 }
 
-/* SIDE PANEL */
-.sidePanel{
-    display:flex;
-    flex-direction:column;
-    gap:20px;
+.channel svg { flex-shrink: 0; opacity: .7; }
+.channel .unread {
+  margin-left: auto;
+  background: var(--accent);
+  color: #000;
+  font-size: 11px;
+  font-weight: 700;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 5px;
 }
 
-.panel{
-    background:rgba(12,12,12,.8);
-    border:1px solid rgba(204,153,153,.12);
-    border-radius:25px;
-    padding:25px;
-    backdrop-filter:blur(20px);
-    box-shadow:0 0 30px rgba(204,153,153,.05);
+.voice-user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 10px 4px 36px;
+  font-size: 13px;
+  color: var(--text-muted);
 }
 
-.panel h2{
-    color:#CC9999;
-    margin-bottom:20px;
-    font-size:24px;
+.voice-user .avatar-sm {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #000;
+  font-size: 9px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.search{
-    width:100%;
-    padding:18px;
-    border:none;
-    outline:none;
-    background:#111;
-    border-radius:16px;
-    color:white;
-    border:1px solid rgba(204,153,153,.15);
-    transition:.3s;
+/* User panel */
+.user-panel {
+  height: 52px;
+  background: rgba(0,0,0,.5);
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  gap: 8px;
 }
 
-.search:focus{
-    border-color:#CC9999;
-    box-shadow:0 0 25px rgba(204,153,153,.2);
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+  padding: 4px;
+  border-radius: 8px;
+  cursor: pointer;
 }
 
-/* STATS */
-.stats{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:15px;
+.user-info:hover { background: var(--bg-hover); }
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), #996666);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 13px;
+  color: #000;
+  position: relative;
+  flex-shrink: 0;
 }
 
-.stat{
-    background:#101010;
-    border-radius:18px;
-    padding:20px;
-    border:1px solid rgba(204,153,153,.08);
+.avatar .status {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2.5px solid var(--bg-sidebar);
+  background: var(--online);
 }
 
-.stat h3{
-    color:#CC9999;
-    font-size:28px;
+.user-meta {
+  min-width: 0;
+  flex: 1;
 }
 
-.stat p{
-    color:#666;
-    margin-top:6px;
+.user-meta .name {
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* GAME CARD */
-.games{
-    margin-top:25px;
+.user-meta .tag {
+  font-size: 11px;
+  color: var(--text-dim);
 }
 
-.games h2{
-    color:#CC9999;
-    font-size:34px;
-    margin-bottom:25px;
+.user-controls {
+  display: flex;
+  gap: 2px;
 }
 
-.gameGrid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
-    gap:25px;
+.icon-btn {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .12s, color .12s;
 }
 
-.gameCard{
-    position:relative;
-    overflow:hidden;
-    border-radius:25px;
-    background:#0b0b0b;
-    border:1px solid rgba(204,153,153,.12);
-    transition:.4s;
+.icon-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text);
 }
 
-.gameCard:hover{
-    transform:translateY(-10px);
-    box-shadow:0 0 45px rgba(204,153,153,.15);
-    border-color:#CC9999;
+.icon-btn.muted { color: var(--dnd); }
+.icon-btn.muted:hover { background: rgba(237,66,69,.15); }
+
+/* ========== MAIN CHAT ========== */
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background: var(--bg-chat);
+  position: relative;
 }
 
-.gameCard img{
-    width:100%;
-    height:230px;
-    object-fit:cover;
+.chat-header {
+  height: 48px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(0,0,0,.25);
+  box-shadow: 0 1px 0 rgba(204,153,153,.05);
+  flex-shrink: 0;
+  z-index: 5;
 }
 
-.overlay{
-    position:absolute;
-    inset:0;
-    background:linear-gradient(to top, rgba(0,0,0,.95), transparent);
+.chat-header .channel-icon {
+  color: var(--text-muted);
+  display: flex;
 }
 
-.gameContent{
-    position:absolute;
-    bottom:0;
-    width:100%;
-    padding:25px;
+.chat-header h2 {
+  font-size: 16px;
+  font-weight: 700;
 }
 
-.gameContent h3{
-    font-size:28px;
-    margin-bottom:10px;
+.chat-header .topic {
+  font-size: 13px;
+  color: var(--text-muted);
+  border-left: 1px solid rgba(255,255,255,.1);
+  padding-left: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.gameContent p{
-    color:#999;
-    margin-bottom:18px;
+.chat-header-actions {
+  margin-left: auto;
+  display: flex;
+  gap: 4px;
+  align-items: center;
 }
 
-.playBtn{
-    width:100%;
-    padding:16px;
-    border:none;
-    border-radius:14px;
-    background:#CC9999;
-    color:#000;
-    font-weight:bold;
-    cursor:pointer;
-    transition:.3s;
-    font-size:15px;
+.search-box {
+  display: flex;
+  align-items: center;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0 10px;
+  height: 28px;
+  width: 160px;
+  transition: width .2s, border-color .2s;
 }
 
-.playBtn:hover{
-    transform:scale(1.03);
-    box-shadow:0 0 35px rgba(204,153,153,.4);
+.search-box:focus-within {
+  width: 220px;
+  border-color: var(--accent);
 }
 
-/* --- ESTILOS DE LA INTELIGENCIA ARTIFICIAL INTERACTIVA --- */
-.ai-widget {
-    position: fixed;
-    bottom: 25px;
-    right: 25px;
-    z-index: 9999;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
+.search-box input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text);
+  font-size: 13px;
+  width: 100%;
+  font-family: inherit;
 }
 
-.ai-bubble-toggle {
-    width: 65px;
-    height: 65px;
-    border-radius: 50%;
-    background: #111;
-    border: 2px solid #CC9999;
-    box-shadow: 0 0 25px rgba(204, 153, 153, 0.4);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: 0.3s;
+.search-box input::placeholder { color: var(--text-dim); }
+
+/* Messages */
+.messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 0;
+  scroll-behavior: smooth;
 }
 
-.ai-bubble-toggle:hover {
-    transform: scale(1.08);
-    background: #CC9999;
+.welcome {
+  padding: 16px 16px 24px;
+  border-bottom: 1px solid rgba(255,255,255,.04);
+  margin-bottom: 8px;
 }
 
-.ai-bubble-toggle img {
-    width: 35px;
-    height: 35px;
-    filter: drop-shadow(0 0 5px rgba(0,0,0,0.5));
+.welcome-icon {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(204,153,153,.3), rgba(204,153,153,.1));
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+  box-shadow: 0 0 40px rgba(204,153,153,.15);
 }
 
-.ai-chat-window {
-    width: 380px;
-    height: 500px;
-    background: rgba(10, 10, 10, 0.95);
-    border: 1px solid rgba(204, 153, 153, 0.3);
-    border-radius: 24px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.8), 0 0 30px rgba(204,153,153,0.1);
-    backdrop-filter: blur(20px);
-    display: none;
-    flex-direction: column;
-    overflow: hidden;
-    margin-bottom: 15px;
-    transition: 0.3s ease;
+.welcome h3 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 6px;
 }
 
-.ai-header {
-    background: linear-gradient(90deg, #161616, #221a1a);
-    padding: 15px 20px;
-    border-bottom: 1px solid rgba(204, 153, 153, 0.2);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.welcome p {
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 1.5;
 }
 
-.ai-header h3 {
-    color: #CC9999;
-    font-size: 16px;
-    letter-spacing: 1px;
+.message {
+  display: flex;
+  gap: 16px;
+  padding: 4px 16px;
+  position: relative;
+  transition: background .1s;
 }
 
-.ai-messages {
-    flex: 1;
-    padding: 20px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap:12px;
+.message:hover {
+  background: rgba(255,255,255,.02);
 }
 
-.msg {
-    max-width: 80%;
-    padding: 12px 16px;
-    border-radius: 16px;
-    font-size: 14px;
-    line-height: 1.5;
+.message.grouped {
+  padding-top: 2px;
+  padding-bottom: 2px;
 }
 
-.msg.ai {
-    background: rgba(204, 153, 153, 0.08);
-    border: 1px solid rgba(204, 153, 153, 0.2);
-    color: #e0e0e0;
-    align-self: flex-start;
-    border-top-left-radius: 4px;
+.message.grouped .msg-avatar { visibility: hidden; }
+.message.grouped .msg-header { display: none; }
+
+.msg-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 15px;
+  color: #000;
+  cursor: pointer;
+  margin-top: 2px;
 }
 
-.msg.user {
-    background: #CC9999;
-    color: #000;
-    font-weight: 500;
-    align-self: flex-end;
-    border-top-right-radius: 4px;
+.msg-body { flex: 1; min-width: 0; }
+
+.msg-header {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 2px;
 }
 
-.ai-input-area {
-    padding: 15px;
-    background: #111;
-    border-top: 1px solid rgba(204, 153, 153, 0.15);
-    display: flex;
-    gap: 10px;
+.msg-author {
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
 }
 
-.ai-input-area input {
-    flex: 1;
-    background: #050505;
-    border: 1px solid #333;
-    padding: 12px;
-    border-radius: 10px;
-    color: white;
-    outline: none;
+.msg-author:hover { text-decoration: underline; }
+
+.msg-author .badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  background: var(--accent);
+  color: #000;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 4px;
+  margin-left: 6px;
+  vertical-align: middle;
 }
 
-.ai-input-area input:focus {
-    border-color: #CC9999;
+.msg-time {
+  font-size: 11px;
+  color: var(--text-dim);
 }
 
-.ai-input-area button {
-    background: #CC9999;
-    color: black;
-    border: none;
-    padding: 0 15px;
-    border-radius: 10px;
-    font-weight: bold;
-    cursor: pointer;
+.msg-content {
+  font-size: 15px;
+  line-height: 1.45;
+  word-wrap: break-word;
+  color: #dcddde;
 }
 
-@media(max-width:1200px){
-    .hero{ grid-template-columns:1fr; }
-    .playerCard{ min-height:600px; }
-    .logoText h1{ font-size:28px; }
-    .ai-chat-window { width: 320px; height: 420px; }
+.msg-content a { color: var(--accent); }
+
+.msg-content .mention {
+  background: rgba(204,153,153,.2);
+  color: var(--accent);
+  padding: 0 4px;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
 }
+
+.msg-content .mention:hover {
+  background: var(--accent);
+  color: #000;
+}
+
+.msg-reactions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 6px;
+}
+
+.reaction {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.06);
+  border-radius: 8px;
+  padding: 2px 8px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: .12s;
+}
+
+.reaction:hover, .reaction.mine {
+  background: rgba(204,153,153,.15);
+  border-color: var(--accent-soft);
+}
+
+.reaction .count {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.reaction.mine .count { color: var(--accent); }
+
+.msg-actions {
+  position: absolute;
+  top: -14px;
+  right: 16px;
+  display: none;
+  background: var(--bg-sidebar);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0,0,0,.4);
+}
+
+.message:hover .msg-actions { display: flex; }
+
+.msg-actions button {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+
+.msg-actions button:hover {
+  background: var(--bg-hover);
+  color: var(--text);
+}
+
+/* Date divider */
+.date-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  color: var(--text-dim);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.date-divider::before,
+.date-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(255,255,255,.06);
+}
+
+/* Input area */
+.input-area {
+  padding: 0 16px 24px;
+  flex-shrink: 0;
+}
+
+.input-wrap {
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  display: flex;
+  align-items: flex-end;
+  padding: 4px;
+  transition: border-color .2s, box-shadow .2s;
+}
+
+.input-wrap:focus-within {
+  border-color: var(--accent-soft);
+  box-shadow: 0 0 0 1px rgba(204,153,153,.1), 0 0 24px rgba(204,153,153,.08);
+}
+
+.input-wrap .icon-btn { margin-bottom: 2px; }
+
+#messageInput {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text);
+  font-size: 15px;
+  font-family: inherit;
+  padding: 10px 4px;
+  max-height: 200px;
+  resize: none;
+  line-height: 1.4;
+}
+
+#messageInput::placeholder { color: var(--text-dim); }
+
+.typing-indicator {
+  height: 20px;
+  padding: 0 16px;
+  font-size: 12px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  opacity: 0;
+  transition: opacity .2s;
+}
+
+.typing-indicator.show { opacity: 1; }
+
+.typing-dots span {
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  background: var(--accent);
+  border-radius: 50%;
+  animation: bounce 1.2s infinite;
+}
+
+.typing-dots span:nth-child(2) { animation-delay: .2s; }
+.typing-dots span:nth-child(3) { animation-delay: .4s; }
+
+@keyframes bounce {
+  0%, 60%, 100% { transform: translateY(0); opacity: .4; }
+  30% { transform: translateY(-4px); opacity: 1; }
+}
+
+/* ========== MEMBERS ========== */
+.members {
+  width: 240px;
+  background: var(--bg-members);
+  border-left: 1px solid var(--border);
+  overflow-y: auto;
+  flex-shrink: 0;
+  padding: 16px 8px;
+}
+
+.members.hidden { display: none; }
+
+.member-group {
+  margin-bottom: 20px;
+}
+
+.member-group h4 {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  color: var(--text-muted);
+  padding: 0 8px;
+  margin-bottom: 6px;
+}
+
+.member {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background .12s;
+}
+
+.member:hover { background: var(--bg-hover); }
+
+.member .avatar {
+  width: 32px;
+  height: 32px;
+  font-size: 12px;
+}
+
+.member .avatar .status {
+  border-color: var(--bg-members);
+}
+
+.member-name {
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.member-name .role-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 4px;
+}
+
+.member-status-text {
+  font-size: 11px;
+  color: var(--text-dim);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ========== VOICE BAR ========== */
+.voice-bar {
+  display: none;
+  background: linear-gradient(135deg, rgba(204,153,153,.12), rgba(0,0,0,.4));
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin: 8px;
+  padding: 10px 12px;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.voice-bar.connected { display: flex; }
+
+.voice-bar-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--online);
+}
+
+.voice-bar-status .pulse {
+  width: 8px;
+  height: 8px;
+  background: var(--online);
+  border-radius: 50%;
+  animation: pulse-dot 1.5s infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(59,165,93,.5); }
+  50% { opacity: .7; box-shadow: 0 0 0 6px rgba(59,165,93,0); }
+}
+
+.voice-bar-channel {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.voice-bar-controls {
+  display: flex;
+  gap: 4px;
+}
+
+.voice-bar-controls .icon-btn {
+  flex: 1;
+  height: 36px;
+  background: rgba(0,0,0,.3);
+  border-radius: 8px;
+}
+
+.voice-bar-controls .icon-btn.danger:hover {
+  background: var(--dnd);
+  color: #fff;
+}
+
+/* ========== MODALS / OVERLAYS ========== */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.7);
+  backdrop-filter: blur(8px);
+  z-index: 100;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.overlay.show { display: flex; }
+
+.modal {
+  background: #121212;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  width: 90%;
+  max-width: 440px;
+  padding: 24px;
+  box-shadow: 0 0 60px rgba(204,153,153,.12), 0 24px 48px rgba(0,0,0,.5);
+  animation: modalIn .25s ease;
+}
+
+@keyframes modalIn {
+  from { opacity: 0; transform: scale(.95) translateY(10px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.modal h2 {
+  font-size: 20px;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+.modal p {
+  color: var(--text-muted);
+  font-size: 14px;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.modal label {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.modal input, .modal select {
+  width: 100%;
+  padding: 12px 14px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  font-size: 15px;
+  font-family: inherit;
+  outline: none;
+  margin-bottom: 16px;
+}
+
+.modal input:focus, .modal select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(204,153,153,.15);
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.btn {
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: .15s;
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-muted);
+}
+
+.btn-ghost:hover { color: var(--text); }
+
+.btn-primary {
+  background: var(--accent);
+  color: #000;
+}
+
+.btn-primary:hover {
+  box-shadow: 0 0 24px var(--accent-glow);
+  transform: translateY(-1px);
+}
+
+/* Emoji picker */
+.emoji-picker {
+  position: absolute;
+  bottom: 70px;
+  right: 60px;
+  background: #161616;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px;
+  display: none;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 4px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.5);
+  z-index: 50;
+  max-width: 320px;
+}
+
+.emoji-picker.show { display: grid; }
+
+.emoji-picker button {
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: transparent;
+  font-size: 20px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background .1s;
+}
+
+.emoji-picker button:hover { background: var(--bg-hover); }
+
+/* Install banner */
+.install-banner {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, #1a1212, #121212);
+  border: 1px solid var(--accent-soft);
+  border-radius: 16px;
+  padding: 14px 20px;
+  display: none;
+  align-items: center;
+  gap: 16px;
+  z-index: 200;
+  box-shadow: 0 0 40px rgba(204,153,153,.2), 0 12px 40px rgba(0,0,0,.5);
+  animation: slideUp .4s ease;
+  max-width: 90vw;
+}
+
+.install-banner.show { display: flex; }
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+.install-banner img {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+}
+
+.install-banner .info strong {
+  display: block;
+  font-size: 14px;
+  color: var(--accent);
+}
+
+.install-banner .info span {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.install-banner .btn-primary { white-space: nowrap; }
+
+.install-banner .close-install {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  cursor: pointer;
+  font-size: 18px;
+  padding: 4px;
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #161616;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 18px;
+  font-size: 14px;
+  z-index: 300;
+  transform: translateX(120%);
+  transition: transform .3s ease;
+  box-shadow: 0 8px 24px rgba(0,0,0,.4);
+  max-width: 320px;
+}
+
+.toast.show { transform: translateX(0); }
+.toast.success { border-color: var(--online); }
+.toast.error { border-color: var(--dnd); }
+
+/* Context menu */
+.context-menu {
+  position: fixed;
+  background: #161616;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 6px;
+  z-index: 150;
+  display: none;
+  min-width: 180px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.5);
+}
+
+.context-menu.show { display: block; }
+
+.context-menu button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 12px;
+  border: none;
+  background: transparent;
+  color: var(--text);
+  font-size: 14px;
+  font-family: inherit;
+  border-radius: 6px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.context-menu button:hover { background: var(--bg-hover); }
+.context-menu button.danger { color: var(--dnd); }
+.context-menu button.danger:hover { background: rgba(237,66,69,.15); }
+.context-menu hr {
+  border: none;
+  border-top: 1px solid rgba(255,255,255,.06);
+  margin: 4px 0;
+}
+
+/* Mobile */
+.mobile-toggle {
+  display: none;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 4px;
+}
+
+@media (max-width: 900px) {
+  .members { display: none; }
+  .members.mobile-open {
+    display: block;
+    position: absolute;
+    right: 0;
+    top: 48px;
+    bottom: 0;
+    z-index: 30;
+    box-shadow: -8px 0 32px rgba(0,0,0,.5);
+  }
+  .mobile-toggle { display: flex; }
+}
+
+@media (max-width: 700px) {
+  .sidebar {
+    position: absolute;
+    left: 72px;
+    top: 0;
+    bottom: 0;
+    z-index: 25;
+    transform: translateX(-100%);
+    transition: transform .25s ease;
+    box-shadow: 8px 0 32px rgba(0,0,0,.5);
+  }
+  .sidebar.mobile-open { transform: translateX(0); }
+  .chat-header .topic { display: none; }
+  .search-box { display: none; }
+}
+
+/* Settings panel slide */
+.settings-view {
+  display: none;
+  position: absolute;
+  inset: 0;
+  background: var(--bg-deep);
+  z-index: 40;
+  overflow-y: auto;
+  padding: 40px;
+}
+
+.settings-view.show { display: block; }
+
+.settings-view h2 {
+  font-size: 24px;
+  color: var(--accent);
+  margin-bottom: 24px;
+}
+
+.settings-section {
+  max-width: 600px;
+  margin-bottom: 32px;
+}
+
+.settings-section h3 {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+.setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  background: rgba(255,255,255,.02);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  margin-bottom: 8px;
+}
+
+.setting-row span { font-size: 14px; }
+
+.toggle {
+  width: 44px;
+  height: 24px;
+  background: #333;
+  border-radius: 12px;
+  position: relative;
+  cursor: pointer;
+  transition: background .2s;
+  border: none;
+}
+
+.toggle.on { background: var(--accent); }
+
+.toggle::after {
+  content: '';
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  background: #fff;
+  border-radius: 50%;
+  top: 3px;
+  left: 3px;
+  transition: left .2s;
+}
+
+.toggle.on::after { left: 23px; }
+
+/* Embed card in messages */
+.embed {
+  margin-top: 8px;
+  border-left: 4px solid var(--accent);
+  background: rgba(0,0,0,.3);
+  border-radius: 0 8px 8px 0;
+  padding: 12px 16px;
+  max-width: 420px;
+}
+
+.embed-title {
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 4px;
+  font-size: 15px;
+}
+
+.embed-desc {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.embed-footer {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-top: 8px;
+}
+
+/* System message */
+.system-msg {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 16px;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.system-msg svg { color: var(--accent); flex-shrink: 0; }
 </style>
 </head>
-
 <body>
+<div id="app">
+  <!-- Server rail -->
+  <nav class="server-rail" id="serverRail" aria-label="Servidores"></nav>
 
-<div class="container">
-
-    <div class="navbar">
-        <div class="logoArea">
-            <img src="https://www.creativosrp.com/images/logo/Logo3d.gif">
-            <div class="logoText">
-                <h1>CREATIVOS GAMES</h1>
-                <p>Future Cloud Gaming Interface</p>
-            </div>
-        </div>
-
-        <div class="navButtons">
-            <button class="navBtn" onclick="goHome()">RESET</button>
-            <button class="navBtn" onclick="toggleFullscreen()">FULLSCREEN</button>
-        </div>
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="server-header" id="serverHeader" onclick="toggleServerMenu(event)">
+      <h1 id="serverName">Creativos HQ</h1>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>
     </div>
 
-    <div class="hero">
-        <div class="playerCard">
-            <div class="topInfo">
-                <div class="liveBox">● SYSTEM ONLINE</div>
-                <div class="liveBox">RTX STREAM READY</div>
-            </div>
-
-            <div class="controls">
-                <button class="controlBtn" onclick="toggleFullscreen()">⛶ FULLSCREEN</button>
-                <button class="controlBtn" onclick="goHome()">✖ CLOSE</button>
-            </div>
-
-            <div class="centerLogo" id="placeholderLogo">
-                <img src="https://www.creativosrp.com/images/logo/Logo3d.gif">
-            </div>
-
-            <iframe
-                id="mainPlayer"
-                class="playerFrame"
-                src="about:blank"
-                allowfullscreen
-                allow="autoplay; fullscreen; gamepad *; microphone; camera"
-                referrerpolicy="no-referrer">
-            </iframe>
-        </div>
-
-        <div class="sidePanel">
-            <div class="panel">
-                <h2>SEARCH ENGINE</h2>
-                <input
-                    type="text"
-                    class="search"
-                    id="searchInput"
-                    placeholder="Search Game..."
-                    onkeyup="filterGames()"
-                >
-            </div>
-
-            <div class="panel">
-                <h2>QUANTUM STATS</h2>
-                <div class="stats">
-                    <div class="stat">
-                        <h3>4K</h3>
-                        <p>Streaming</p>
-                    </div>
-                    <div class="stat">
-                        <h3>240</h3>
-                        <p>FPS Mode</p>
-                    </div>
-                    <div class="stat">
-                        <h3>RTX</h3>
-                        <p>Graphics</p>
-                    </div>
-                    <div class="stat">
-                        <h3>LIVE</h3>
-                        <p>Gaming</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="panel">
-                <h2>AI STATUS</h2>
-                <p style="color:#888; line-height:1.8;">
-                    Neural Gaming System Active.<br>
-                    Ultra Performance Enabled.<br>
-                    Quantum Rendering Online.
-                </p>
-            </div>
-        </div>
+    <div class="voice-bar" id="voiceBar">
+      <div class="voice-bar-status">
+        <span class="pulse"></span>
+        <span>Conectado a voz</span>
+      </div>
+      <div class="voice-bar-channel" id="voiceChannelName">General</div>
+      <div class="voice-bar-controls">
+        <button class="icon-btn" id="voiceMuteBtn" onclick="toggleVoiceMute()" title="Silenciar">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm-1-9c0-.55.45-1 1-1s1 .45 1 1v6c0 .55-.45 1-1 1s-1-.45-1-1V5zm6 6c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
+        </button>
+        <button class="icon-btn" id="voiceDeafenBtn" onclick="toggleVoiceDeafen()" title="Ensordecer">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1a9 9 0 0 0-9 9v7c0 1.66 1.34 3 3 3h3v-8H5v-2c0-3.87 3.13-7 7-7s7 3.13 7 7v2h-4v8h3c1.66 0 3-1.34 3-3v-7a9 9 0 0 0-9-9z"/></svg>
+        </button>
+        <button class="icon-btn danger" onclick="disconnectVoice()" title="Desconectar">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 9c-1.6 0-3.15.25-4.6.72v3.1c0 .18-.1.34-.25.43-.46.26-.94.48-1.44.66-.18.07-.38.02-.5-.13-.3-.37-.4-.84-.4-1.3 0-.1.01-.2.02-.3C3.67 11.38 3 9.78 3 8c0-1.66.57-3.18 1.52-4.4C6.15 2.58 8.9 2 12 2s5.85.58 7.48 1.6C20.43 4.82 21 6.34 21 8c0 1.78-.67 3.38-1.83 4.48.01.1.02.2.02.3 0 .46-.1.93-.4 1.3-.12.15-.32.2-.5.13-.5-.18-.98-.4-1.44-.66-.15-.09-.25-.25-.25-.43v-3.1C15.15 9.25 13.6 9 12 9z"/></svg>
+        </button>
+      </div>
     </div>
 
-    <div class="games">
-        <h2>FEATURED GAME</h2>
-        <div class="gameGrid" id="gamesContainer">
+    <div class="channels" id="channels"></div>
 
-            <div class="gameCard game-item">
-                <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=1200&auto=format&fit=crop">
-                <div class="overlay"></div>
-                <div class="gameContent">
-                    <h3 class="title">LS RELAY</h3>
-                    <p>Next generation cloud gaming experience.</p>
-                    <button class="playBtn" onclick="playVideo('https://s3.amazonaws.com/lsrelay-a/index.html#/')">PLAY NOW</button>
-                </div>
-            </div>
-
+    <div class="user-panel">
+      <div class="user-info" onclick="openSettings()">
+        <div class="avatar" id="myAvatar">Tú<span class="status" id="myStatus"></span></div>
+        <div class="user-meta">
+          <div class="name" id="myName">Tú</div>
+          <div class="tag" id="myTag">#0001</div>
         </div>
+      </div>
+      <div class="user-controls">
+        <button class="icon-btn" id="micBtn" onclick="toggleMic()" title="Micrófono">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
+        </button>
+        <button class="icon-btn" id="headBtn" onclick="toggleHead()" title="Auriculares">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1c-4.97 0-9 4.03-9 9v7c0 1.66 1.34 3 3 3h3v-8H5v-2c0-3.87 3.13-7 7-7s7 3.13 7 7v2h-4v8h3c1.66 0 3-1.34 3-3v-7c0-4.97-4.03-9-9-9z"/></svg>
+        </button>
+        <button class="icon-btn" onclick="openSettings()" title="Ajustes">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.14 12.94c.04-.31.06-.63.06-.94 0-.31-.02-.63-.06-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.49.49 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.48.48 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96a.49.49 0 0 0-.59.22L2.74 8.87a.48.48 0 0 0 .12.61l2.03 1.58c-.04.31-.06.63-.06.94s.02.63.06.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32a.48.48 0 0 0-.12-.61l-2.01-1.58zM12 15.6A3.6 3.6 0 1 1 12 8.4a3.6 3.6 0 0 1 0 7.2z"/></svg>
+        </button>
+      </div>
     </div>
+  </aside>
+
+  <!-- Main chat -->
+  <main class="main" id="main">
+    <div class="chat-header">
+      <button class="mobile-toggle" onclick="toggleSidebar()" aria-label="Menú">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+      </button>
+      <span class="channel-icon" id="headerIcon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M5.41 21L6.12 17H2.12L2.47 15H6.47L7.53 9H3.53L3.88 7H7.88L8.59 3H10.59L9.88 7H15.88L16.59 3H18.59L17.88 7H21.88L21.53 9H17.53L16.47 15H20.47L20.12 17H16.12L15.41 21H13.41L14.12 17H8.12L7.41 21H5.41ZM9.53 9L8.47 15H14.47L15.53 9H9.53Z"/></svg>
+      </span>
+      <h2 id="channelTitle">general</h2>
+      <span class="topic" id="channelTopic">Bienvenido a Creativos Cord ✨</span>
+      <div class="chat-header-actions">
+        <div class="search-box">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="opacity:.5;margin-right:6px"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+          <input type="text" placeholder="Buscar" id="searchInput" oninput="searchMessages(this.value)">
+        </div>
+        <button class="icon-btn" onclick="toggleMembers()" title="Miembros">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+        </button>
+        <button class="icon-btn" onclick="promptInstall()" title="Instalar app">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="messages" id="messages"></div>
+
+    <div class="typing-indicator" id="typing">
+      <span class="typing-dots"><span></span><span></span><span></span></span>
+      <span id="typingText"></span>
+    </div>
+
+    <div class="input-area">
+      <div class="input-wrap">
+        <button class="icon-btn" onclick="toggleEmojiPicker()" title="Emoji">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/></svg>
+        </button>
+        <textarea id="messageInput" rows="1" placeholder="Escribe en #general" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+        <button class="icon-btn" onclick="sendMessage()" title="Enviar">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+        </button>
+      </div>
+      <div class="emoji-picker" id="emojiPicker"></div>
+    </div>
+
+    <!-- Settings overlay inside main -->
+    <div class="settings-view" id="settingsView">
+      <button class="btn btn-ghost" onclick="closeSettings()" style="margin-bottom:20px">← Volver</button>
+      <h2>Ajustes de usuario</h2>
+      <div class="settings-section">
+        <h3>Mi cuenta</h3>
+        <div class="setting-row">
+          <span>Nombre de usuario</span>
+          <input type="text" id="settingsName" value="Tú" style="width:180px;padding:8px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:inherit;outline:none" onchange="updateUsername(this.value)">
+        </div>
+        <div class="setting-row">
+          <span>Estado</span>
+          <select id="settingsStatus" onchange="updateStatus(this.value)" style="padding:8px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:inherit">
+            <option value="online">En línea</option>
+            <option value="idle">Ausente</option>
+            <option value="dnd">No molestar</option>
+            <option value="offline">Invisible</option>
+          </select>
+        </div>
+      </div>
+      <div class="settings-section">
+        <h3>Apariencia</h3>
+        <div class="setting-row">
+          <span>Mostrar lista de miembros</span>
+          <button class="toggle on" id="togMembers" onclick="this.classList.toggle('on');toggleMembers(this.classList.contains('on'))"></button>
+        </div>
+        <div class="setting-row">
+          <span>Notificaciones de escritorio</span>
+          <button class="toggle" id="togNotif" onclick="toggleNotif(this)"></button>
+        </div>
+        <div class="setting-row">
+          <span>Sonidos</span>
+          <button class="toggle on" id="togSound" onclick="this.classList.toggle('on');state.sounds=this.classList.contains('on')"></button>
+        </div>
+      </div>
+      <div class="settings-section">
+        <h3>App</h3>
+        <div class="setting-row">
+          <span>Instalar Creativos Cord</span>
+          <button class="btn btn-primary" onclick="promptInstall()">Instalar .app</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Members -->
+  <aside class="members" id="members"></aside>
 </div>
 
-<div class="ai-widget">
-    <div class="ai-chat-window" id="aiChatWindow">
-        <div class="ai-header">
-            <h3>🤖 CREATIVOS AI ASSISTANT</h3>
-            <span style="color: #666; font-size: 12px; cursor:pointer;" onclick="toggleChat()">[HIDE]</span>
-        </div>
-        <div class="ai-messages" id="aiMessages">
-            <div class="msg ai">Hello! I am your Neural Assistant. I can search games or control the system interface. Try saying: <b>"Play LS Relay"</b> or <b>"Fullscreen"</b>.</div>
-        </div>
-        <div class="ai-input-area">
-            <input type="text" id="aiInput" placeholder="Ask AI anything..." onkeydown="if(event.key === 'Enter') sendAiMessage()">
-            <button onclick="sendAiMessage()">SEND</button>
-        </div>
+<!-- Create server modal -->
+<div class="overlay" id="createServerModal">
+  <div class="modal">
+    <h2>Crear servidor</h2>
+    <p>Dale un nombre premium a tu nueva comunidad.</p>
+    <label>Nombre del servidor</label>
+    <input type="text" id="newServerName" placeholder="Mi servidor pro" maxlength="40">
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('createServerModal')">Cancelar</button>
+      <button class="btn btn-primary" onclick="createServer()">Crear</button>
     </div>
-    <div class="ai-bubble-toggle" onclick="toggleChat()">
-        <img src="https://www.creativosrp.com/images/logo/Logo3d.gif" alt="AI">
-    </div>
+  </div>
+</div>
+
+<!-- Server menu -->
+<div class="context-menu" id="serverMenu">
+  <button onclick="inviteLink()">🔗 Invitar personas</button>
+  <button onclick="createChannelPrompt()">➕ Crear canal</button>
+  <hr>
+  <button onclick="openSettings()">⚙️ Ajustes del servidor</button>
+  <hr>
+  <button class="danger" onclick="closeMenu()">Salir del servidor</button>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- Install banner -->
+<div class="install-banner" id="installBanner">
+  <img src="icons/icon-192.png" alt="Creativos">
+  <div class="info">
+    <strong>Instalar Creativos Cord</strong>
+    <span>Añádelo como app en tu dispositivo</span>
+  </div>
+  <button class="btn btn-primary" onclick="promptInstall()">Instalar</button>
+  <button class="close-install" onclick="dismissInstall()" aria-label="Cerrar">×</button>
 </div>
 
 <script>
-function playVideo(url){
-    const player = document.getElementById('mainPlayer');
-    const logo = document.getElementById('placeholderLogo');
-    player.src = url;
-    logo.style.display = "none";
-    window.scrollTo({ top:0, behavior:"smooth" });
+const EMOJIS = ['😀','😂','🥹','😍','🔥','✨','💯','🎉','👍','👎','❤️','💜','🌹','⚡','🎮','🏆','👑','💎','🚀','😎','🤝','💬','🎵','🌙'];
+const COLORS = ['#CC9999','#E8B4B8','#F4A6A6','#D4A5A5','#C9A0A0','#B76E79','#E0AFA0','#F2D0A9','#A8DADC','#B5EAD7','#C7CEEA','#FFDAC1'];
+
+const state = {
+  user: { name: localStorage.getItem('cc_name') || 'Tú', tag: '0001', status: localStorage.getItem('cc_status') || 'online', color: '#CC9999' },
+  activeServer: 0,
+  activeChannel: null,
+  micMuted: false,
+  headDeafened: false,
+  voiceConnected: null,
+  voiceMuted: false,
+  voiceDeafened: false,
+  sounds: true,
+  membersVisible: true,
+  deferredPrompt: null,
+  messages: {},
+  typingTimer: null
+};
+
+const servers = [
+  {
+    id: 'creativos',
+    name: 'Creativos HQ',
+    icon: 'icons/icon-192.png',
+    initials: 'CG',
+    categories: [
+      {
+        name: 'Información',
+        channels: [
+          { id: 'anuncios', name: 'anuncios', type: 'text', topic: 'Anuncios oficiales del staff', readonly: true },
+          { id: 'reglas', name: 'reglas', type: 'text', topic: 'Normas de la comunidad', readonly: true },
+          { id: 'novedades', name: 'novedades', type: 'text', topic: 'Últimas actualizaciones' }
+        ]
+      },
+      {
+        name: 'Comunidad',
+        channels: [
+          { id: 'general', name: 'general', type: 'text', topic: 'Chat general de la comunidad ✨', unread: 3 },
+          { id: 'gaming', name: 'gaming', type: 'text', topic: 'Habla de juegos y partidas' },
+          { id: 'clips', name: 'clips-y-media', type: 'text', topic: 'Comparte clips y capturas' },
+          { id: 'offtopic', name: 'off-topic', type: 'text', topic: 'De todo un poco' }
+        ]
+      },
+      {
+        name: 'Voz',
+        channels: [
+          { id: 'v-lobby', name: 'Lobby', type: 'voice', users: ['Nova', 'Alex'] },
+          { id: 'v-gaming', name: 'Gaming Pro', type: 'voice', users: [] },
+          { id: 'v-chill', name: 'Chill Zone', type: 'voice', users: ['Luna'] }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'pro-league',
+    name: 'Pro League',
+    initials: 'PL',
+    color: '#E8B4B8',
+    categories: [
+      {
+        name: 'Canales de texto',
+        channels: [
+          { id: 'pl-general', name: 'general', type: 'text', topic: 'Liga competitiva' },
+          { id: 'pl-scrims', name: 'scrims', type: 'text', topic: 'Organiza scrims' },
+          { id: 'pl-resultados', name: 'resultados', type: 'text', topic: 'Resultados de partidas' }
+        ]
+      },
+      {
+        name: 'Voz',
+        channels: [
+          { id: 'pl-team1', name: 'Team Alpha', type: 'voice', users: [] },
+          { id: 'pl-team2', name: 'Team Beta', type: 'voice', users: [] }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'vip-lounge',
+    name: 'VIP Lounge',
+    initials: 'VIP',
+    color: '#F2D0A9',
+    categories: [
+      {
+        name: 'Exclusivo',
+        channels: [
+          { id: 'vip-salon', name: 'salón-vip', type: 'text', topic: 'Solo para miembros premium 💎' },
+          { id: 'vip-drops', name: 'drops', type: 'text', topic: 'Drops y recompensas' }
+        ]
+      },
+      {
+        name: 'Voz VIP',
+        channels: [
+          { id: 'vip-voice', name: 'Sala Premium', type: 'voice', users: ['Crown'] }
+        ]
+      }
+    ]
+  }
+];
+
+const membersData = [
+  { name: 'Creativos Bot', role: 'Bot', status: 'online', color: '#CC9999', bot: true, activity: 'Moderando' },
+  { name: 'Nova', role: 'Admin', status: 'online', color: '#E8B4B8', activity: 'En Lobby' },
+  { name: 'Alex', role: 'Mod', status: 'online', color: '#A8DADC', activity: 'Jugando Valorant' },
+  { name: 'Luna', role: 'VIP', status: 'idle', color: '#C7CEEA', activity: 'Spotify' },
+  { name: 'Crown', role: 'VIP', status: 'online', color: '#F2D0A9', activity: 'En Sala Premium' },
+  { name: 'Shadow', role: 'Miembro', status: 'dnd', color: '#B76E79', activity: 'No molestar' },
+  { name: 'Pixel', role: 'Miembro', status: 'online', color: '#B5EAD7', activity: '' },
+  { name: 'Kai', role: 'Miembro', status: 'offline', color: '#996666', activity: '' },
+  { name: 'Riven', role: 'Miembro', status: 'online', color: '#FFDAC1', activity: 'Diseñando' },
+  { name: 'Echo', role: 'Miembro', status: 'idle', color: '#D4A5A5', activity: 'Ausente' }
+];
+
+const seedMessages = {
+  general: [
+    { author: 'Creativos Bot', color: '#CC9999', bot: true, time: '10:00', text: '¡Bienvenidos a **Creativos Cord**! 🌹 La comunidad premium de Creativos Games.', embed: { title: 'Guía rápida', desc: 'Lee #reglas · Únete a un canal de voz · Usa @everyone con cuidado', footer: 'Creativos · Premium' } },
+    { author: 'Nova', color: '#E8B4B8', time: '10:12', text: 'Buenas equipo 🔥 ¿Quién se apunta a ranked esta noche?' },
+    { author: 'Alex', color: '#A8DADC', time: '10:13', text: 'Yo estoy dentro. Canal de voz **Gaming Pro** a las 21:00.' },
+    { author: 'Luna', color: '#C7CEEA', time: '10:15', text: 'Acabo de subir un clip a <#clips-y-media> 👀' },
+    { author: 'Pixel', color: '#B5EAD7', time: '10:20', text: 'El estilo de este servidor es otro nivel ✨ super pro' },
+    { author: 'Riven', color: '#FFDAC1', time: '10:22', text: 'Alguien para duo? Menciona a @Alex si estás free' },
+    { author: 'Crown', color: '#F2D0A9', time: '10:30', text: 'Drops VIP activos en el lounge 💎', reactions: [{ e: '💎', c: 4 }, { e: '🔥', c: 2 }] },
+    { author: 'Nova', color: '#E8B4B8', time: '10:35', text: 'Recuerden que pueden **instalar la app** con el botón de descarga arriba 📲' }
+  ],
+  anuncios: [
+    { author: 'Creativos Bot', color: '#CC9999', bot: true, time: '09:00', text: '📢 **Actualización Creativos Cord v1.0**', embed: { title: 'Novedades', desc: '• Chat en tiempo real local\n• Canales de voz UI\n• Instalable como app (PWA)\n• Tema premium rose-gold', footer: 'Staff Creativos' } }
+  ],
+  reglas: [
+    { author: 'Creativos Bot', color: '#CC9999', bot: true, time: '00:00', text: '**Normas de la comunidad**\n1. Respeta a todos los miembros\n2. No spam ni flood\n3. Contenido NSFW prohibido\n4. Usa los canales correctos\n5. Diviértete 🌹' }
+  ],
+  gaming: [
+    { author: 'Alex', color: '#A8DADC', time: '11:00', text: 'Valorant act pasada fue brutal. ¿Alguien en Immortal?' },
+    { author: 'Shadow', color: '#B76E79', time: '11:05', text: 'Yo Diamond 3, busco 5-stack.' }
+  ],
+  'clips-y-media': [
+    { author: 'Luna', color: '#C7CEEA', time: '09:40', text: 'Clip del ace de ayer 🎬🔥', reactions: [{ e: '🔥', c: 6 }, { e: '👏', c: 3 }] }
+  ],
+  'off-topic': [
+    { author: 'Pixel', color: '#B5EAD7', time: '12:00', text: '¿Qué música escuchan para concentrarse?' }
+  ],
+  novedades: [
+    { author: 'Creativos Bot', color: '#CC9999', bot: true, time: '08:00', text: 'Nueva skin pack disponible en la tienda Creativos 🛍️' }
+  ],
+  'pl-general': [
+    { author: 'Crown', color: '#F2D0A9', time: '14:00', text: 'Torneo este sábado. Inscripciones abiertas.' }
+  ],
+  'pl-scrims': [
+    { author: 'Alex', color: '#A8DADC', time: '15:00', text: 'Scrim a las 18:00. Confirmen aquí.' }
+  ],
+  'pl-resultados': [
+    { author: 'Nova', color: '#E8B4B8', time: '20:00', text: 'Team Alpha 13-9 Team Beta 🏆' }
+  ],
+  'salón-vip': [
+    { author: 'Crown', color: '#F2D0A9', time: '16:00', text: 'Bienvenidos al lounge exclusivo 💎' }
+  ],
+  drops: [
+    { author: 'Creativos Bot', color: '#CC9999', bot: true, time: '12:00', text: '🎁 Drop sorpresa en 10 minutos. Estad atentos.' }
+  ]
+};
+
+// Init messages from seed + localStorage
+function loadMessages() {
+  const saved = localStorage.getItem('cc_messages');
+  if (saved) {
+    try { state.messages = JSON.parse(saved); return; } catch(e) {}
+  }
+  state.messages = JSON.parse(JSON.stringify(seedMessages));
 }
 
-function goHome(){
-    const player = document.getElementById('mainPlayer');
-    const logo = document.getElementById('placeholderLogo');
-    player.src = "about:blank";
-    logo.style.display = "flex";
-    if(document.fullscreenElement){ document.exitFullscreen(); }
-    window.scrollTo({ top:0, behavior:"smooth" });
+function saveMessages() {
+  localStorage.setItem('cc_messages', JSON.stringify(state.messages));
 }
 
-function toggleFullscreen(){
-    const playerCard = document.querySelector(".playerCard");
-    if(!document.fullscreenElement){
-        playerCard.requestFullscreen();
-    }else{
-        document.exitFullscreen();
+function initials(name) {
+  return name.split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase();
+}
+
+function formatText(text) {
+  const esc = (s) => s.replace(/&/g, '&'+'amp;').replace(/</g, '&'+'lt;').replace(/>/g, '&'+'gt;');
+  return esc(text)
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    .replace(/`(.+?)`/g, '<code style="background:rgba(0,0,0,.4);padding:2px 5px;border-radius:4px;font-size:13px">$1</code>')
+    .replace(/<#([\w-]+)>/g, '<span class="mention">#$1</span>')
+    .replace(/@(\w+)/g, '<span class="mention">@$1</span>')
+    .replace(/\n/g, '<br>');
+}
+
+function toast(msg, type = '') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'toast show ' + type;
+  setTimeout(() => el.classList.remove('show'), 2800);
+}
+
+function playSound() {
+  if (!state.sounds) return;
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.connect(g); g.connect(ctx.destination);
+    o.frequency.value = 880;
+    g.gain.value = 0.04;
+    o.start();
+    g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
+    o.stop(ctx.currentTime + 0.15);
+  } catch(e) {}
+}
+
+/* ========== RENDER ========== */
+function renderServers() {
+  const rail = document.getElementById('serverRail');
+  rail.innerHTML = servers.map((s, i) => `
+    <button class="server-btn ${i === state.activeServer ? 'active' : ''}" 
+      style="${s.color && !s.icon ? 'background:'+s.color+';color:#000' : ''}"
+      onclick="selectServer(${i})" title="${s.name}">
+      <span class="pill"></span>
+      ${s.icon ? `<img src="${s.icon}" alt="${s.name}">` : s.initials}
+    </button>
+  `).join('') + `
+    <div class="server-divider"></div>
+    <button class="server-btn add" onclick="openModal('createServerModal')" title="Añadir servidor">+</button>
+  `;
+}
+
+function renderChannels() {
+  const server = servers[state.activeServer];
+  document.getElementById('serverName').textContent = server.name;
+  const el = document.getElementById('channels');
+  el.innerHTML = server.categories.map((cat, ci) => `
+    <div class="category" data-ci="${ci}">
+      <div class="category-header" onclick="this.parentElement.classList.toggle('collapsed')">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg>
+        <span>${cat.name}</span>
+      </div>
+      <div class="channel-list">
+        ${cat.channels.map(ch => {
+          const active = state.activeChannel === ch.id;
+          const icon = ch.type === 'voice'
+            ? `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2s2-.9 2-2V3c0-1.1-.9-2-2-2zm5 8c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>`
+            : `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M5.41 21L6.12 17H2.12L2.47 15H6.47L7.53 9H3.53L3.88 7H7.88L8.59 3H10.59L9.88 7H15.88L16.59 3H18.59L17.88 7H21.88L21.53 9H17.53L16.47 15H20.47L20.12 17H16.12L15.41 21H13.41L14.12 17H8.12L7.41 21H5.41ZM9.53 9L8.47 15H14.47L15.53 9H9.53Z"/></svg>`;
+          const voiceUsers = ch.type === 'voice' && ch.users && ch.users.length
+            ? ch.users.map(u => `<div class="voice-user"><div class="avatar-sm">${initials(u)}</div>${u}</div>`).join('')
+            : '';
+          return `
+            <div class="channel ${active ? 'active' : ''}" onclick="${ch.type === 'voice' ? `joinVoice('${ch.id}','${ch.name}')` : `selectChannel('${ch.id}')`}">
+              ${icon}
+              <span>${ch.name}</span>
+              ${ch.unread ? `<span class="unread">${ch.unread}</span>` : ''}
+            </div>
+            ${voiceUsers}
+          `;
+        }).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function findChannel(id) {
+  const server = servers[state.activeServer];
+  for (const cat of server.categories) {
+    const ch = cat.channels.find(c => c.id === id);
+    if (ch) return ch;
+  }
+  return null;
+}
+
+function selectServer(i) {
+  state.activeServer = i;
+  const server = servers[i];
+  const firstText = server.categories.flatMap(c => c.channels).find(c => c.type === 'text');
+  state.activeChannel = firstText ? firstText.id : null;
+  renderServers();
+  renderChannels();
+  renderMessages();
+  renderMembers();
+  document.getElementById('sidebar').classList.remove('mobile-open');
+}
+
+function selectChannel(id) {
+  const ch = findChannel(id);
+  if (!ch || ch.type === 'voice') return;
+  state.activeChannel = id;
+  if (ch.unread) ch.unread = 0;
+  renderChannels();
+  renderMessages();
+  document.getElementById('channelTitle').textContent = ch.name;
+  document.getElementById('channelTopic').textContent = ch.topic || '';
+  document.getElementById('messageInput').placeholder = `Escribe en #${ch.name}`;
+  document.getElementById('messageInput').disabled = !!ch.readonly;
+  if (ch.readonly) document.getElementById('messageInput').placeholder = 'Canal de solo lectura';
+  document.getElementById('sidebar').classList.remove('mobile-open');
+  document.getElementById('settingsView').classList.remove('show');
+}
+
+function renderMessages(filter = '') {
+  const box = document.getElementById('messages');
+  const ch = findChannel(state.activeChannel);
+  if (!ch) { box.innerHTML = ''; return; }
+
+  document.getElementById('channelTitle').textContent = ch.name;
+  document.getElementById('channelTopic').textContent = ch.topic || '';
+
+  let msgs = state.messages[state.activeChannel] || [];
+  if (filter) {
+    const q = filter.toLowerCase();
+    msgs = msgs.filter(m => m.text.toLowerCase().includes(q) || m.author.toLowerCase().includes(q));
+  }
+
+  let html = `
+    <div class="welcome">
+      <div class="welcome-icon">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="var(--accent)"><path d="M5.41 21L6.12 17H2.12L2.47 15H6.47L7.53 9H3.53L3.88 7H7.88L8.59 3H10.59L9.88 7H15.88L16.59 3H18.59L17.88 7H21.88L21.53 9H17.53L16.47 15H20.47L20.12 17H16.12L15.41 21H13.41L14.12 17H8.12L7.41 21H5.41ZM9.53 9L8.47 15H14.47L15.53 9H9.53Z"/></svg>
+      </div>
+      <h3>¡Bienvenido a #${ch.name}!</h3>
+      <p>${ch.topic || 'Este es el inicio del canal.'}</p>
+    </div>
+    <div class="date-divider"><span>Hoy</span></div>
+  `;
+
+  let lastAuthor = null;
+  msgs.forEach((m, i) => {
+    const grouped = lastAuthor === m.author;
+    lastAuthor = m.author;
+    const reactions = (m.reactions || []).map((r, ri) =>
+      `<button class="reaction ${r.mine ? 'mine' : ''}" onclick="toggleReaction(${i},${ri})"><span>${r.e}</span><span class="count">${r.c}</span></button>`
+    ).join('');
+    const embed = m.embed ? `
+      <div class="embed">
+        <div class="embed-title">${m.embed.title}</div>
+        <div class="embed-desc">${formatText(m.embed.desc)}</div>
+        ${m.embed.footer ? `<div class="embed-footer">${m.embed.footer}</div>` : ''}
+      </div>` : '';
+
+    html += `
+      <div class="message ${grouped ? 'grouped' : ''}" data-i="${i}">
+        <div class="msg-avatar" style="background:${m.color || '#CC9999'}">${initials(m.author)}</div>
+        <div class="msg-body">
+          <div class="msg-header">
+            <span class="msg-author" style="color:${m.color || 'var(--text)'}">${m.author}${m.bot ? '<span class="badge">BOT</span>' : ''}</span>
+            <span class="msg-time">hoy a las ${m.time}</span>
+          </div>
+          <div class="msg-content">${formatText(m.text)}</div>
+          ${embed}
+          ${reactions ? `<div class="msg-reactions">${reactions}</div>` : ''}
+        </div>
+        <div class="msg-actions">
+          <button onclick="addReactionQuick(${i})" title="Reaccionar">😊</button>
+          <button onclick="replyTo(${i})" title="Responder">↩️</button>
+          <button onclick="copyMsg(${i})" title="Copiar">📋</button>
+        </div>
+      </div>
+    `;
+  });
+
+  box.innerHTML = html;
+  box.scrollTop = box.scrollHeight;
+}
+
+function renderMembers() {
+  const el = document.getElementById('members');
+  const me = { name: state.user.name, role: 'Tú', status: state.user.status, color: state.user.color, activity: 'En línea' };
+  const all = [me, ...membersData];
+  const groups = {
+    'En línea': all.filter(m => m.status === 'online' || m.status === 'idle' || m.status === 'dnd'),
+    'Desconectados': all.filter(m => m.status === 'offline')
+  };
+
+  el.innerHTML = Object.entries(groups).map(([title, list]) => {
+    if (!list.length) return '';
+    return `
+      <div class="member-group">
+        <h4>${title} — ${list.length}</h4>
+        ${list.map(m => `
+          <div class="member" title="${m.name}">
+            <div class="avatar" style="background:${m.color}">
+              ${initials(m.name)}
+              <span class="status" style="background:var(--${m.status})"></span>
+            </div>
+            <div style="min-width:0">
+              <div class="member-name" style="color:${m.role === 'Admin' || m.role === 'Bot' ? m.color : 'inherit'}">${m.name}</div>
+              ${m.activity ? `<div class="member-status-text">${m.activity}</div>` : ''}
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  }).join('');
+}
+
+/* ========== ACTIONS ========== */
+function sendMessage() {
+  const input = document.getElementById('messageInput');
+  const text = input.value.trim();
+  if (!text || !state.activeChannel) return;
+  const ch = findChannel(state.activeChannel);
+  if (ch && ch.readonly) { toast('Canal de solo lectura', 'error'); return; }
+
+  const now = new Date();
+  const time = now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0');
+  if (!state.messages[state.activeChannel]) state.messages[state.activeChannel] = [];
+  state.messages[state.activeChannel].push({
+    author: state.user.name,
+    color: state.user.color,
+    time,
+    text
+  });
+  saveMessages();
+  input.value = '';
+  autoResize(input);
+  renderMessages();
+  playSound();
+
+  // Simulate reply sometimes
+  if (Math.random() > 0.55) {
+    simulateReply();
+  }
+}
+
+function simulateReply() {
+  const bots = membersData.filter(m => m.status === 'online');
+  if (!bots.length) return;
+  const who = bots[Math.floor(Math.random() * bots.length)];
+  const replies = [
+    'Jajaja cierto 😂',
+    'Vamos 🔥',
+    'De acuerdo 👍',
+    'Interesante...',
+    'Yo también pensaba eso',
+    'gg wp',
+    '¿Alguien más se apunta?',
+    'Eso está super pro ✨',
+    'Anotado 📝',
+    '🔥🔥🔥'
+  ];
+  showTyping(who.name);
+  setTimeout(() => {
+    hideTyping();
+    const now = new Date();
+    const time = now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0');
+    if (!state.messages[state.activeChannel]) return;
+    state.messages[state.activeChannel].push({
+      author: who.name,
+      color: who.color,
+      time,
+      text: replies[Math.floor(Math.random() * replies.length)]
+    });
+    saveMessages();
+    renderMessages();
+    playSound();
+  }, 1200 + Math.random() * 1800);
+}
+
+function showTyping(name) {
+  const el = document.getElementById('typing');
+  document.getElementById('typingText').textContent = `${name} está escribiendo...`;
+  el.classList.add('show');
+}
+
+function hideTyping() {
+  document.getElementById('typing').classList.remove('show');
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 200) + 'px';
+}
+
+function toggleReaction(msgI, rI) {
+  const msg = state.messages[state.activeChannel][msgI];
+  const r = msg.reactions[rI];
+  if (r.mine) { r.c--; r.mine = false; if (r.c <= 0) msg.reactions.splice(rI, 1); }
+  else { r.c++; r.mine = true; }
+  saveMessages();
+  renderMessages();
+}
+
+function addReactionQuick(msgI) {
+  const msg = state.messages[state.activeChannel][msgI];
+  if (!msg.reactions) msg.reactions = [];
+  const existing = msg.reactions.find(r => r.e === '👍');
+  if (existing) { existing.c++; existing.mine = true; }
+  else msg.reactions.push({ e: '👍', c: 1, mine: true });
+  saveMessages();
+  renderMessages();
+}
+
+function replyTo(i) {
+  const msg = state.messages[state.activeChannel][i];
+  const input = document.getElementById('messageInput');
+  input.value = `@${msg.author} `;
+  input.focus();
+}
+
+function copyMsg(i) {
+  const msg = state.messages[state.activeChannel][i];
+  navigator.clipboard.writeText(msg.text).then(() => toast('Mensaje copiado', 'success'));
+}
+
+function searchMessages(q) {
+  renderMessages(q);
+}
+
+/* Voice */
+function joinVoice(id, name) {
+  state.voiceConnected = id;
+  document.getElementById('voiceBar').classList.add('connected');
+  document.getElementById('voiceChannelName').textContent = name;
+  toast(`Conectado a ${name}`, 'success');
+  playSound();
+
+  // Add self to voice users visually
+  const ch = findChannel(id);
+  if (ch && ch.users && !ch.users.includes(state.user.name)) {
+    ch.users.push(state.user.name);
+    renderChannels();
+  }
+}
+
+function disconnectVoice() {
+  if (state.voiceConnected) {
+    const ch = findChannel(state.voiceConnected);
+    if (ch && ch.users) {
+      ch.users = ch.users.filter(u => u !== state.user.name);
     }
+  }
+  state.voiceConnected = null;
+  document.getElementById('voiceBar').classList.remove('connected');
+  renderChannels();
+  toast('Desconectado de la voz');
 }
 
-function filterGames(){
-    let input = document.getElementById("searchInput").value.toLowerCase();
-    let items = document.getElementsByClassName("game-item");
-    for(let i = 0; i < items.length; i++){
-        let title = items[i].getElementsByClassName("title")[0].innerText.toLowerCase();
-        items[i].style.display = title.includes(input) ? "block" : "none";
+function toggleVoiceMute() {
+  state.voiceMuted = !state.voiceMuted;
+  document.getElementById('voiceMuteBtn').classList.toggle('muted', state.voiceMuted);
+  toast(state.voiceMuted ? 'Micrófono silenciado' : 'Micrófono activado');
+}
+
+function toggleVoiceDeafen() {
+  state.voiceDeafened = !state.voiceDeafened;
+  document.getElementById('voiceDeafenBtn').classList.toggle('muted', state.voiceDeafened);
+  if (state.voiceDeafened) {
+    state.voiceMuted = true;
+    document.getElementById('voiceMuteBtn').classList.add('muted');
+  }
+  toast(state.voiceDeafened ? 'Ensordecido' : 'Audio activado');
+}
+
+function toggleMic() {
+  state.micMuted = !state.micMuted;
+  document.getElementById('micBtn').classList.toggle('muted', state.micMuted);
+}
+
+function toggleHead() {
+  state.headDeafened = !state.headDeafened;
+  document.getElementById('headBtn').classList.toggle('muted', state.headDeafened);
+}
+
+/* UI helpers */
+function toggleMembers(force) {
+  const el = document.getElementById('members');
+  if (typeof force === 'boolean') {
+    state.membersVisible = force;
+    el.classList.toggle('hidden', !force);
+    el.classList.toggle('mobile-open', force && window.innerWidth <= 900);
+  } else if (window.innerWidth <= 900) {
+    el.classList.toggle('mobile-open');
+  } else {
+    state.membersVisible = !state.membersVisible;
+    el.classList.toggle('hidden', !state.membersVisible);
+    document.getElementById('togMembers').classList.toggle('on', state.membersVisible);
+  }
+}
+
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('mobile-open');
+}
+
+function openModal(id) {
+  document.getElementById(id).classList.add('show');
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('show');
+}
+
+function createServer() {
+  const name = document.getElementById('newServerName').value.trim();
+  if (!name) return;
+  const id = 's' + Date.now();
+  servers.push({
+    id,
+    name,
+    initials: initials(name).slice(0, 3),
+    color: COLORS[Math.floor(Math.random() * COLORS.length)],
+    categories: [{
+      name: 'Canales de texto',
+      channels: [{ id: id + '-gen', name: 'general', type: 'text', topic: 'Canal general de ' + name }]
+    }, {
+      name: 'Voz',
+      channels: [{ id: id + '-voice', name: 'General', type: 'voice', users: [] }]
+    }]
+  });
+  state.messages[id + '-gen'] = [{
+    author: 'Creativos Bot', color: '#CC9999', bot: true, time: 'ahora',
+    text: `Servidor **${name}** creado. ¡Bienvenido! 🎉`
+  }];
+  closeModal('createServerModal');
+  document.getElementById('newServerName').value = '';
+  selectServer(servers.length - 1);
+  toast('Servidor creado', 'success');
+}
+
+function toggleServerMenu(e) {
+  e.stopPropagation();
+  const menu = document.getElementById('serverMenu');
+  const rect = e.currentTarget.getBoundingClientRect();
+  menu.style.left = rect.left + 'px';
+  menu.style.top = (rect.bottom + 4) + 'px';
+  menu.classList.toggle('show');
+}
+
+function closeMenu() {
+  document.getElementById('serverMenu').classList.remove('show');
+}
+
+function inviteLink() {
+  closeMenu();
+  const code = 'creativos-' + Math.random().toString(36).slice(2, 8);
+  navigator.clipboard.writeText('https://creativos.cord/invite/' + code).then(() => {
+    toast('Enlace de invitación copiado', 'success');
+  });
+}
+
+function createChannelPrompt() {
+  closeMenu();
+  const name = prompt('Nombre del canal:');
+  if (!name) return;
+  const server = servers[state.activeServer];
+  const cat = server.categories.find(c => c.channels.some(ch => ch.type === 'text')) || server.categories[0];
+  const id = 'ch' + Date.now();
+  cat.channels.push({ id, name: name.toLowerCase().replace(/\s+/g, '-'), type: 'text', topic: '' });
+  state.messages[id] = [];
+  renderChannels();
+  selectChannel(id);
+  toast('Canal #' + name + ' creado', 'success');
+}
+
+function openSettings() {
+  closeMenu();
+  document.getElementById('settingsView').classList.add('show');
+  document.getElementById('settingsName').value = state.user.name;
+  document.getElementById('settingsStatus').value = state.user.status;
+}
+
+function closeSettings() {
+  document.getElementById('settingsView').classList.remove('show');
+}
+
+function updateUsername(name) {
+  if (!name.trim()) return;
+  state.user.name = name.trim();
+  localStorage.setItem('cc_name', state.user.name);
+  document.getElementById('myName').textContent = state.user.name;
+  document.getElementById('myAvatar').childNodes[0].textContent = initials(state.user.name);
+  renderMembers();
+  toast('Nombre actualizado', 'success');
+}
+
+function updateStatus(s) {
+  state.user.status = s;
+  localStorage.setItem('cc_status', s);
+  document.getElementById('myStatus').style.background = `var(--${s})`;
+  renderMembers();
+}
+
+function toggleNotif(btn) {
+  btn.classList.toggle('on');
+  if (btn.classList.contains('on') && 'Notification' in window) {
+    Notification.requestPermission().then(p => {
+      if (p === 'granted') toast('Notificaciones activadas', 'success');
+    });
+  }
+}
+
+/* Emoji picker */
+function toggleEmojiPicker() {
+  const p = document.getElementById('emojiPicker');
+  p.classList.toggle('show');
+}
+
+function buildEmojiPicker() {
+  const p = document.getElementById('emojiPicker');
+  p.innerHTML = EMOJIS.map(e => `<button type="button" onclick="insertEmoji('${e}')">${e}</button>`).join('');
+}
+
+function insertEmoji(e) {
+  const input = document.getElementById('messageInput');
+  input.value += e;
+  input.focus();
+  document.getElementById('emojiPicker').classList.remove('show');
+}
+
+/* PWA Install */
+function promptInstall() {
+  if (state.deferredPrompt) {
+    state.deferredPrompt.prompt();
+    state.deferredPrompt.userChoice.then(r => {
+      if (r.outcome === 'accepted') toast('¡App instalada!', 'success');
+      state.deferredPrompt = null;
+      dismissInstall();
+    });
+  } else {
+    // Fallback instructions
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    if (isIOS) {
+      toast('En iOS: Compartir → Añadir a pantalla de inicio');
+    } else {
+      toast('Usa el menú del navegador → Instalar aplicación');
     }
+  }
 }
 
-/* --- LÓGICA JAVASCRIPT DE LA INTELIGENCIA ARTIFICIAL --- */
-function toggleChat() {
-    const chat = document.getElementById('aiChatWindow');
-    chat.style.display = (chat.style.display === 'flex') ? 'none' : 'flex';
+function dismissInstall() {
+  document.getElementById('installBanner').classList.remove('show');
+  localStorage.setItem('cc_install_dismissed', '1');
 }
 
-function sendAiMessage() {
-    const input = document.getElementById('aiInput');
-    const msgText = input.value.trim();
-    if (!msgText) return;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  state.deferredPrompt = e;
+  if (!localStorage.getItem('cc_install_dismissed')) {
+    setTimeout(() => document.getElementById('installBanner').classList.add('show'), 2500);
+  }
+});
 
-    // Mostrar mensaje del usuario
-    appendMessage(msgText, 'user');
-    input.value = '';
+window.addEventListener('appinstalled', () => {
+  toast('Creativos Cord instalado como app 🎉', 'success');
+  dismissInstall();
+});
 
-    // Simular procesamiento inteligente local antes de conectarse a servidores externos
-    setTimeout(() => {
-        processAiCommand(msgText);
-    }, 600);
+/* Global clicks */
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('#serverMenu') && !e.target.closest('#serverHeader')) closeMenu();
+  if (!e.target.closest('#emojiPicker') && !e.target.closest('[onclick="toggleEmojiPicker()"]')) {
+    document.getElementById('emojiPicker').classList.remove('show');
+  }
+  if (window.innerWidth <= 700 && !e.target.closest('.sidebar') && !e.target.closest('.mobile-toggle') && !e.target.closest('.server-rail')) {
+    document.getElementById('sidebar').classList.remove('mobile-open');
+  }
+});
+
+document.getElementById('createServerModal').addEventListener('click', (e) => {
+  if (e.target.id === 'createServerModal') closeModal('createServerModal');
+});
+
+/* SW registration */
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(() => {});
 }
 
-function appendMessage(text, sender) {
-    const container = document.getElementById('aiMessages');
-    const msgDiv = document.createElement('div');
-    msgDiv.className = `msg ${sender}`;
-    msgDiv.innerHTML = text;
-    container.appendChild(msgDiv);
-    container.scrollTop = container.scrollHeight;
-}
-
-// Procesador Inteligente que automatiza tu Interfaz de manera Perfecta
-function processAiCommand(text) {
-    const cleanText = text.toLowerCase();
-
-    // 1. Control de comandos del sistema
-    if (cleanText.includes('fullscreen') || cleanText.includes('pantalla completa')) {
-        toggleFullscreen();
-        appendMessage("System updated: Fullscreen triggered.", 'ai');
-        return;
-    }
-    if (cleanText.includes('close') || cleanText.includes('stop') || cleanText.includes('home') || cleanText.includes('reset')) {
-        goHome();
-        appendMessage("Interface has been successfully reset.", 'ai');
-        return;
-    }
-
-    // 2. Control Inteligente: Búsqueda y ejecución automática de juegos de tu lista
-    if (cleanText.includes('play') || cleanText.includes('jugar') || cleanText.includes('open')) {
-        let items = document.getElementsByClassName("game-item");
-        for (let i = 0; i < items.length; i++) {
-            let title = items[i].getElementsByClassName("title")[0].innerText.toLowerCase();
-            if (cleanText.includes(title)) {
-                let btn = items[i].querySelector(".playBtn");
-                btn.click();
-                appendMessage(`Launching <b>${title.toUpperCase()}</b> now inside the Main Cloud Player...`, 'ai');
-                return;
-            }
-        }
-    }
-
-    // 3. Sistema de respuestas predefinidas sobre Creativos Games
-    if (cleanText.includes('hello') || cleanText.includes('hola') || cleanText.includes('hi')) {
-        appendMessage("Hello gamer! How can I assist you in the platform today?", 'ai');
-        return;
-    }
-
-    // 4. Respuesta alternativa (Aquí es donde conectarías tu API Key definitiva)
-    appendMessage("Command received. Running optimization protocols on Creative Servers...", 'ai');
-}
+/* Boot */
+loadMessages();
+document.getElementById('myName').textContent = state.user.name;
+document.getElementById('myAvatar').childNodes[0].textContent = initials(state.user.name);
+document.getElementById('myStatus').style.background = `var(--${state.user.status})`;
+buildEmojiPicker();
+renderServers();
+selectServer(0);
+selectChannel('general');
 </script>
-
 </body>
 </html>
